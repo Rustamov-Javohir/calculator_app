@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main_logic.dart'; // Import the logic file
+import 'main_logic.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Calculator',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: CalculatorLogic(), // Use CalculatorLogic as the root widget
+      home: CalculatorLogic(),
     );
   }
 }
@@ -36,7 +36,6 @@ class CalculatorUI extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Display Section
             Expanded(
               flex: 2,
               child: Container(
@@ -56,57 +55,123 @@ class CalculatorUI extends StatelessWidget {
                 ),
               ),
             ),
-            // Buttons Section
             Expanded(
               flex: 5,
               child: Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
                 ),
-                child: GridView.count(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 15,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ...['C', '(', ')', '/'].map(
-                      (text) => CalculatorButton(
-                        text: text,
-                        color: text == 'C' ? Colors.yellow[200] : Colors.orange,
-                        onPressed: onButtonPressed,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CalculatorButton(
+                          text: 'C',
+                          color: Colors.yellow[200],
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: '(',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: ')',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: '/',
+                          color: Colors.orange,
+                          onPressed: onButtonPressed,
+                        ),
+                      ],
                     ),
-                    ...['7', '8', '9', 'x'].map(
-                      (text) => CalculatorButton(
-                        text: text,
-                        color: text == 'x' ? Colors.orange : Colors.grey[300],
-                        onPressed: onButtonPressed,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CalculatorButton(
+                          text: '7',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: '8',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: '9',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: 'x',
+                          color: Colors.orange,
+                          onPressed: onButtonPressed,
+                        ),
+                      ],
                     ),
-                    ...['4', '5', '6', '-'].map(
-                      (text) => CalculatorButton(
-                        text: text,
-                        color: text == '-' ? Colors.orange : Colors.grey[300],
-                        onPressed: onButtonPressed,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CalculatorButton(
+                          text: '4',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: '5',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: '6',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: '-',
+                          color: Colors.orange,
+                          onPressed: onButtonPressed,
+                        ),
+                      ],
                     ),
-                    ...['1', '2', '3', '+'].map(
-                      (text) => CalculatorButton(
-                        text: text,
-                        color: text == '+' ? Colors.orange : Colors.grey[300],
-                        onPressed: onButtonPressed,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CalculatorButton(
+                          text: '1',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: '2',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: '3',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: '+',
+                          color: Colors.orange,
+                          onPressed: onButtonPressed,
+                        ),
+                      ],
                     ),
-                    ...['0', '.', '='].map(
-                      (text) => CalculatorButton(
-                        text: text,
-                        color: text == '=' ? Colors.green : Colors.grey[300],
-                        onPressed: onButtonPressed,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CalculatorButton(
+                            text: '0',
+                            onPressed: onButtonPressed,
+                          ),
+                        
+                        CalculatorButton(
+                          text: '.',
+                          onPressed: onButtonPressed,
+                        ),
+                        CalculatorButton(
+                          text: '=',
+                          color: Colors.green,
+                          onPressed: onButtonPressed,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -159,37 +224,42 @@ class _CalculatorButtonState extends State<CalculatorButton> {
 
   @override
   Widget build(BuildContext context) {
+    bool isOrange = widget.color == Colors.orange || widget.color == Colors.green;
+
+    // Use a conditional width for the "0" button
+    double buttonWidth = widget.text == '0' ? MediaQuery.of(context).size.width / 2.7  : 70;
+
     return GestureDetector(
       onTapDown: _handleTapDown,
       onTapUp: _handleTapUp,
       onTapCancel: _handleTapCancel,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 100),
+        width: buttonWidth,  // Adjust width based on the button text
+        height: 70,
         decoration: BoxDecoration(
           color: _isPressed
               ? (widget.color ?? Colors.grey[300])!.withOpacity(0.7)
               : widget.color ?? Colors.grey[300],
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: _isPressed
-              ? []
-              : const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(2, 2),
-                  ),
-                ],
+          borderRadius: BorderRadius.circular(23),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 10,
+              offset: Offset(4, 4),
+            ),
+          ],
         ),
         child: Center(
           child: Text(
             widget.text,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
-              color: Colors.black,
+              color: isOrange ? Colors.white : Colors.black,
             ),
           ),
         ),
       ),
     );
   }
-}
+} 
